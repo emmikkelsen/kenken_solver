@@ -48,25 +48,22 @@ board.add_permutations()
 N = 0
 
 
-def t(g, p) -> Union[List[int], bool]:
+def t(g: int, p: int) -> Union[List[int], bool]:
     global N
     N += 1
+
     if board.try_permutation(g, p):
-        #print(board)
         if g == len(board.groups) - 1:
             return [[g, p]]
         next_group = t(g+1, 0)
+        if next_group:
+            next_group.append([g, p])
+            return next_group
         if not next_group:
             board.reset(g)
-            if p == len(board.groups[g].permutations) - 1:
-                return False
-            return t(g, p+1)
-        next_group.append([g, p])
-        return next_group
-    else:
-        if p == len(board.groups[g].permutations) - 1:
-            return False
-        return t(g, p+1)
+    if p == len(board.groups[g].permutations) - 1:
+        return False
+    return t(g, p+1)
 
 
 solution = t(0, 0)

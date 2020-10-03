@@ -1,4 +1,3 @@
-from os import sendfile
 from typing import List
 from board import Board
 from typing import Set, Optional
