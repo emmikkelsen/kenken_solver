@@ -7,8 +7,10 @@ from group import Group
 class Board2(Board):
     def __init__(self, size):
         super().__init__(size)
-        self._row_sets: List[Set] = [set() for _ in range(size)]
-        self._col_sets: List[Set] = [set() for _ in range(size)]
+        self._row_sets: List[List[bool]] = \
+            [[False for _ in range(size)] for _ in range(size)]
+        self._col_sets: List[List[bool]] = \
+            [[False for _ in range(size)] for _ in range(size)]
         self._active = []
 
     def try_permutation(self, i_g, i_p):
@@ -17,11 +19,11 @@ class Board2(Board):
         locs = g.locations()
 
         for loc, val in zip(locs, p):
-            if val in self._row_sets[loc[0]] or val in self._col_sets[loc[1]]:
+            if self._row_sets[loc[0]][val-1] or self._col_sets[loc[1]][val-1]:
                 return False
         for loc, val in zip(locs, p):
-            self._row_sets[loc[0]].add(val)
-            self._col_sets[loc[1]].add(val)
+            self._row_sets[loc[0]][val-1] = True
+            self._col_sets[loc[1]][val-1] = True
         self._active.append([i_g, i_p])
         return True
 
@@ -30,19 +32,19 @@ class Board2(Board):
             for sq in self._board:
                 sq.value = 0
             self._active = []
-            for s in self._col_sets:
-                s.clear()
-            for s in self._row_sets:
-                s.clear()
+            self._row_sets = [[False for _ in range(self._size)]
+                              for _ in range(self._size)]
+            self._col_sets = [[False for _ in range(self._size)]
+                              for _ in range(self._size)]
         else:
-            val = self._active.pop()
-            g = self._groups[val[0]]
-            p = g.permutations[val[1]]
+            v = self._active.pop()
+            g = self._groups[v[0]]
+            p = g.permutations[v[1]]
             locs = g.locations()
 
-            for i in range(g.size):
-                self._row_sets[locs[i][0]].remove(p[i])
-                self._col_sets[locs[i][1]].remove(p[i])
+            for loc, val in zip(locs, p):
+                self._row_sets[loc[0]][val-1] = False
+                self._col_sets[loc[1]][val-1] = False
 
     def is_valid(self):
         #super().reset()

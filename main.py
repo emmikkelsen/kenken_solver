@@ -51,7 +51,6 @@ N = 0
 def t(g: int, p: int) -> Union[List[int], bool]:
     global N
     N += 1
-
     if board.try_permutation(g, p):
         if g == len(board.groups) - 1:
             return [[g, p]]
