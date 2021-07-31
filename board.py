@@ -2,7 +2,7 @@ from square import Square
 from math import floor
 from group import Group
 from permutation import permutation
-from typing import List, Optional, Sized
+from typing import List, Optional
 
 
 class Board():

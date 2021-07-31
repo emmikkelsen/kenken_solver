@@ -1,5 +1,4 @@
 from typing import List, Union
-from board import Board
 from board2 import Board2
 from operation import Operation
 
