@@ -2,7 +2,7 @@ from square import Square
 from math import floor
 from group import Group
 from permutation import permutation
-from typing import List, Optional
+from typing import List, Optional, Sized
 
 
 class Board():
@@ -58,6 +58,14 @@ class Board():
                 self.reset()
 
         self._groups.sort(key=lambda x: len(x.permutations))
+
+        locations = []
+        for g in self._groups:
+            for s in g.members:
+                locations.append(s.location)
+        for i in range(self._size):
+            for j in range(self._size):
+                assert any(list == [i, j] for list in locations)
 
     def reset(self, g: Optional[Group] = None) -> None:
         if g is None:

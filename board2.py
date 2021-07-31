@@ -1,6 +1,5 @@
-from typing import List
+from typing import List, Optional
 from board import Board
-from typing import Set, Optional
 from group import Group
 
 
@@ -47,7 +46,6 @@ class Board2(Board):
                 self._col_sets[loc[1]][val-1] = False
 
     def is_valid(self):
-        #super().reset()
         for x in self._active:
             g = self._groups[x[0]]
             p = g.permutations[x[1]]
@@ -58,7 +56,6 @@ class Board2(Board):
         return super().is_valid()
 
     def all_valid(self):
-        #super().reset()
         for x in self._active:
             g = self._groups[x[0]]
             p = g.permutations[x[1]]

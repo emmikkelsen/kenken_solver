@@ -3,7 +3,8 @@ from operation import Operation
 
 def permutation(size, n, op, result):
     if op == Operation.Divide:
-        maxes = list(filter(lambda x: x % result == 0 and x > 0, range(size+1)))
+        maxes = list(filter(lambda x: x % result == 0 and x > 0,
+                            range(size+1)))
         mins = [m//result for m in maxes]
         p = []
         for x in range(len(maxes)):
