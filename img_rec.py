@@ -1,4 +1,5 @@
 # %% imports
+import math
 import cv2
 import random
 import numpy as np
@@ -6,13 +7,13 @@ import pytesseract
 from functools import reduce
 
 # %%
-board = cv2.imread('board.png')
+board = cv2.imread('board3.png')
 N = 7
 
 # %%
 gray = cv2.cvtColor(board, cv2.COLOR_BGR2GRAY)
-blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-_, thresh = cv2.threshold(blurred, 80, 255, cv2.THRESH_BINARY)
+blurred = cv2.GaussianBlur(gray, (15, 15), 0)
+_, thresh = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY)
 # %%
 contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE,
                                        cv2.CHAIN_APPROX_SIMPLE)
@@ -20,12 +21,12 @@ contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE,
 cv2.imwrite('t.png', thresh)
 # %%
 
-shapes = [c for c in contours[2:] if np.sum((np.max(c, axis=0) - np.min(c, axis=0))**2) >= 500]
+shapes = [c for c in contours[2:] if np.sum((np.max(c, axis=0) - np.min(c, axis=0))**2) >= 50000]
 
 # %%
 vertices = np.empty((N+1, N+1, 2))
 upper_left = np.min(contours[1], axis=0)
-dists = ((np.max(contours[1], axis=0) - upper_left) / 7)[0]
+dists = ((np.max(contours[1], axis=0) - upper_left) / N)[0]
 h = np.array([0, dists[1]])
 v = np.array([dists[0], 0])
 for i in range(N + 1):
@@ -46,18 +47,17 @@ for k in range(len(shapes)):
 texts = [[] for _ in range(len(shapes))]
 for k in range(len(shapes)):
     verts = point_shape[k]
-    top = reduce(lambda v, m: min(m, v[0]), verts, N)
-    left = reduce(lambda v, m: min(m, v[1] if v[0] == top else N), verts, N)
+    top = reduce(lambda m, v: min(m, v[0]), verts, N)
+    left = reduce(lambda m, v: min(m, v[1] if v[0] == top else N), verts, N)
 
     assert top < N
     assert left < N
 
-    x = np.zeros(board.shape[:2], dtype="uint8")
-    x = cv2.drawContours(x, shapes, k, (255, 255, 255), -1)
-    masked = cv2.bitwise_and(gray, gray, mask=x)
-    x, y, w, h = cv2.boundingRect(shapes[k])
-    img_part = masked[y:y + 50, x:x + w]
-    texts[k] = pytesseract.image_to_string(img_part)
+    y = math.floor(upper_left[0][0] + top * dists[0])
+    x = math.floor(upper_left[0][1] + left * dists[1])
+
+    img_part = board[(y+5):math.floor(y + 1/2*dists[0]), (x+5):math.floor(x+dists[1]-5)]
+    texts[k] = pytesseract.image_to_string(img_part, config='--oem 0 -c tessedit_char_whitelist="+0123456789"')
     cv2.imwrite(f'img_{k}.png', img_part)
 
 # %%
