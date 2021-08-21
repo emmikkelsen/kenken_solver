@@ -7,7 +7,7 @@ import pytesseract
 from functools import reduce
 
 # %%
-board = cv2.imread('board3.png')
+board = cv2.imread('board4.png')
 N = 7
 
 # %%
@@ -57,7 +57,7 @@ for k in range(len(shapes)):
     x = math.floor(upper_left[0][1] + left * dists[1])
 
     img_part = board[(y+5):math.floor(y + 1/2*dists[0]), (x+5):math.floor(x+dists[1]-5)]
-    texts[k] = pytesseract.image_to_string(img_part, config='--oem 0 -c tessedit_char_whitelist="+0123456789"')
+    texts[k] = pytesseract.image_to_string(img_part)
     cv2.imwrite(f'img_{k}.png', img_part)
 
 # %%
@@ -70,14 +70,4 @@ for c in shapes:
 # %%
 cv2.imwrite('ss.png', ss)
 
-# %%
-idx = 4
-
-d
-# %%
-shape
-# %%
-shape = board.shape[:2]
-# %%
-shape
 # %%
