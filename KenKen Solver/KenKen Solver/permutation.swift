@@ -83,7 +83,7 @@ func peMultiply(boardSize: Int, result: Int, groupSize: Int) -> [[Int]] {
         }
     }
     for x in factors {
-        if (result / x) <= boardSize^(groupSize - 1) {
+        if (result / x) <= boardSize**(groupSize - 1) {
             for ss in peMultiply(boardSize: boardSize, result: result / x, groupSize: groupSize - 1) {
                 t.append(ss + [x])
             }

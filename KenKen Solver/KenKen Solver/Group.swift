@@ -5,11 +5,18 @@
 //  Created by Emil Bach Mikkelsen on 4/14/22.
 //
 
-struct Group {
+class Group {
     private let members: [Square];
     private let operation: Operation;
     private let result: Int;
     private var permutations: [[Int]];
+    
+    init(members: [Square], operation: Operation, result: Int) {
+        self.members = members;
+        self.operation = operation;
+        self.result = result;
+        self.permutations = [];
+    }
 
     func isValid() -> Bool {
         if self.operation == Operation.add {
@@ -36,12 +43,16 @@ struct Group {
         return self.operation;
     }
     
-    mutating func addPermutations(permutation: [Int]) {
+    func addPermutation(permutation: [Int]) {
         self.permutations.append(permutation);
     }
     
     func getPermutation(idx: Int) -> [Int] {
         return self.permutations[idx];
+    }
+    
+    var permutationCount: Int {
+        return self.permutations.count;
     }
     
     func getSize() -> Int {
@@ -52,8 +63,12 @@ struct Group {
         return self.members.map { $0.getLocation() };
     }
     
-    mutating func reset() {
-        for var member in members {
+    func getMembers() -> [Square] {
+        return self.members;
+    }
+    
+    func reset() {
+        for member in members {
             member.setValue(value:  0);
         }
     }

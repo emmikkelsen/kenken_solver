@@ -1,11 +1,11 @@
 //
-//  Board.swift
+//  Square.swift
 //  KenKen Solver
 //
 //  Created by Emil Bach Mikkelsen on 4/14/22.
 //
 
-struct Square {
+class Square {
     private let location: (Int, Int);
     private var value: Int;
 
@@ -14,7 +14,7 @@ struct Square {
         self.value = 0;
     }
     
-    mutating func setValue(value: Int) {
+    func setValue(value: Int) {
         self.value = value;
     }
     

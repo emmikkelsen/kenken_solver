@@ -13,6 +13,7 @@
 		FA1F36A1280866050064F912 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A0280866050064F912 /* Group.swift */; };
 		FA1F36A3280866520064F912 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A2280866520064F912 /* Operation.swift */; };
 		FA1F36A52808717F0064F912 /* permutation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A42808717F0064F912 /* permutation.swift */; };
+		FA1F36A72808B6420064F912 /* infix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A62808B6420064F912 /* infix.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,7 @@
 		FA1F36A0280866050064F912 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		FA1F36A2280866520064F912 /* Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
 		FA1F36A42808717F0064F912 /* permutation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = permutation.swift; sourceTree = "<group>"; };
+		FA1F36A62808B6420064F912 /* infix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infix.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +53,6 @@
 		FA1F368928085D7D0064F912 = {
 			isa = PBXGroup;
 			children = (
-				FA1F36A42808717F0064F912 /* permutation.swift */,
 				FA1F369428085D7D0064F912 /* KenKen Solver */,
 				FA1F369328085D7D0064F912 /* Products */,
 			);
@@ -71,6 +72,8 @@
 				FA1F369528085D7D0064F912 /* main.swift */,
 				FA1F36A2280866520064F912 /* Operation.swift */,
 				FA1F369C280860F20064F912 /* Board.swift */,
+				FA1F36A42808717F0064F912 /* permutation.swift */,
+				FA1F36A62808B6420064F912 /* infix.swift */,
 				FA1F36A0280866050064F912 /* Group.swift */,
 				FA1F369E280864890064F912 /* Square.swift */,
 			);
@@ -140,6 +143,7 @@
 				FA1F369F280864890064F912 /* Square.swift in Sources */,
 				FA1F369628085D7D0064F912 /* main.swift in Sources */,
 				FA1F36A3280866520064F912 /* Operation.swift in Sources */,
+				FA1F36A72808B6420064F912 /* infix.swift in Sources */,
 				FA1F36A1280866050064F912 /* Group.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
