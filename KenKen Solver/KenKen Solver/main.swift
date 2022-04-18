@@ -20,11 +20,11 @@ extension StringProtocol {
 print("Running Main");
 
 func add(locationString: String, operation: Operation, result: Int) {
-    var locations: [(Int, Int)] = [];
+    var locations: [Location] = [];
     for x in stride(from: 0, to: locationString.count, by: 2) {
         let h = Int(locationString[x].asciiValue! - 97);
         let v = Int(String(locationString[x + 1]))! - 1;
-        locations.append((h, v));
+        locations.append(Location(h, v));
     }
     board.addGroup(locations: locations, operation: operation, result: result)
 }
@@ -89,7 +89,11 @@ var iteration = 0;
 func t(g: Int, p: Int) -> (Bool, [(Int, Int)]) {
     iteration += 1;
     
-    if board.tryPermutation(i_g: g, i_p: p) {
+    if (iteration % 1000000 == 0) {
+        print(iteration);
+    }
+    
+    if board.addPermutationIfPossible(idx_g: g, idx_p: p) {
         if (g == board.groupCount - 1) {
             return (true, [(g, p)]);
         }
@@ -107,9 +111,110 @@ func t(g: Int, p: Int) -> (Bool, [(Int, Int)]) {
     return t(g: g, p: p + 1);
 }
 
+func t2() -> ([(Int, Int)], Int) {
+    var iteration = 0;
+    var g = 0;
+    var p = 0;
+    
+    var solved = false;
+    var active: [(Int, Int)] = [];
+    
+    while (!solved) {
+        if (!solved && p == board.getGroup(idx: g).permutationCount) {
+            let last = active.popLast();
+            g = last!.0;
+            p = last!.1 + 1;
+            board.resetLast();
+            continue;
+        }
+        
+        iteration += 1;
+        
+        if (iteration % 1000000 == 0) {
+            print(iteration);
+        }
+        
+        let pValid = board.addPermutationIfPossible(idx_g: g, idx_p: p);
+        if pValid {
+            active.append((g, p));
+            if g == board.groupCount - 1 {
+                solved = true;
+            } else {
+                g += 1;
+                p = 0;
+            }
+        } else {
+            p += 1;
+        }
+    }
+    return (active, iteration);
+}
+
+func t3() -> ([(Int, Int)], Int) {
+    var iteration = 0;
+    var g = 0;
+    var p = 0;
+    
+    var solved = false;
+    var active: [(Int, Int)] = [];
+    
+    while (!solved) {
+        if (!solved && p == board.getGroup(idx: g).permutationCount) {
+            let last = active.popLast()!;
+            board.removePermutation(group: board.getGroup(idx: last.0), permutation: board.getGroup(idx: last.0).getPermutation(idx: last.1));
+
+            g = last.0;
+            p = last.1 + 1;
+            continue;
+        }
+        
+        iteration += 1;
+        
+        if (iteration % 1000000 == 0) {
+            print(iteration);
+        }
+        
+        let group = board.getGroup(idx: g);
+        let permutation = group.getPermutation(idx: p)
+        
+        let pValid = board.addPermutationIfPossible(group: group, permutation: permutation);
+        if pValid {
+            active.append((g, p));
+            if g == board.groupCount - 1 {
+                solved = true;
+            } else {
+                g += 1;
+                p = 0;
+            }
+        } else {
+            p += 1;
+        }
+    }
+    return (active, iteration);
+}
+
 
 let solution = t(g: 0, p: 0);
-print("Found valid board in", iteration, "tries");
+print("Found valid board", solution.1, "in", iteration, "tries");
+
+board.resetBoard();
+
+var s = t2();
+print("Found valid board", s.0, "in", s.1, "tries");
+
+board.resetBoard();
+s = t3();
+print("Found valid board", s.0, "in", s.1, "tries");
+board.resetBoard();
+
+s = t2();
+print("Found valid board", s.0, "in", s.1, "tries");
+
+board.resetBoard();
+s = t3();
+print("Found valid board", s.0, "in", s.1, "tries");
+
+
 print(board);
 print(board.isValid());
 print(board.allValid());

@@ -7,26 +7,26 @@
 
 import Darwin
 
-struct Board {
+class Board {
     let size: Int;
-    private let board: [Square];
+    private var board: Dictionary<Location, Square>;
     private var groups: [Group];
-    private var row_sets: [[Bool]];
-    private var col_sets: [[Bool]];
+    private var row_sets: [Set<Int>];
+    private var col_sets: [Set<Int>];
     private var active: [(Int, Int)];
 
     init(size: Int) {
         self.size = size;
         
-        var board: [Square] = [];
+        var board: Dictionary<Location, Square> = Dictionary();
         for x in 0..<size**2 {
-            board.append(Square(location: (x/size, x%size)));
+            board[Location(x/size, x%size)] = Square();
         }
         self.board = board;
         self.groups = [];
         
-        self.row_sets = base_set(size: size, value: false);
-        self.col_sets = base_set(size: size, value: false);
+        self.row_sets = Array(repeating: Set(), count: size);
+        self.col_sets = Array(repeating: Set(), count: size);
         self.active = [];
     }
     
@@ -34,47 +34,112 @@ struct Board {
         return self.groups.count;
     }
     
-    mutating func tryPermutation(i_g: Int, i_p: Int) -> Bool {
+    func tryPermutation(i_g: Int, i_p: Int) -> Bool {
         let group = self.groups[i_g];
         let permutation = group.getPermutation(idx: i_p);
         let locations = group.getLocations();
         
         for (location, value) in zip(locations, permutation) {
-            if (self.row_sets[location.0][value-1] || self.col_sets[location.1][value-1]) {
+            if (self.row_sets[location.x].contains(value) || self.col_sets[location.y].contains(value)) {
                 return false;
             }
         }
         
         for (location, value) in zip(locations, permutation) {
-            self.row_sets[location.0][value-1] = true;
-            self.col_sets[location.1][value-1] = true;
+            self.row_sets[location.x].insert(value);
+            self.col_sets[location.y].insert(value);
         }
         self.active.append((i_g, i_p));
         
         return true;
     }
     
-    mutating func resetBoard() {
-        for square in self.board {
-            square.setValue(value: 0);
+    @inlinable func addPermutationIfPossible(idx_g: Int, idx_p: Int) -> Bool {
+        let group = self.groups[idx_g];
+        let permutation = group.getPermutation(idx: idx_p);
+        
+        let added = self.addPermutationIfPossible(group: group, permutation: permutation);
+        if added {
+            self.active.append((idx_g, idx_p));
         }
         
-        self.active = [];
-        self.row_sets = base_set(size: self.size, value: false);
-        self.col_sets = base_set(size: self.size, value: false);
+        return added;
     }
     
-    mutating func resetLast() {
+    func addPermutationIfPossible(group: Group, permutation: Permutation) -> Bool {
+        let locations = group.getLocations();
+        if self.valuesPossible(zip(locations, permutation)) {
+            self.addValues(zip(locations, permutation));
+            return true;
+        }
+        return false;
+    }
+    
+    @inlinable func valuesPossible(_ locationsValues: Zip2Sequence<[Location], [Int]>) -> Bool {
+        for (location, value) in locationsValues {
+            if (self.row_sets[location.x].contains(value)) {
+                return false;
+            }
+            if (self.col_sets[location.x].contains(value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    func removePermutation(group: Group, permutation: Permutation) {
+        let locations = group.getLocations();
+        
+        self.removeValues(zip(locations, permutation));
+    }
+    
+    @inlinable func removeValues(_ locationsValues: Zip2Sequence<[Location], [Int]>) {
+        for (location, value) in locationsValues {
+            self.row_sets[location.x].remove(value);
+            self.col_sets[location.y].remove(value);
+        }
+    }
+    
+    @inlinable func addValues(_ locationsValues: Zip2Sequence<[Location], [Int]>) {
+        for (location, value) in locationsValues {
+            self.row_sets[location.x].insert(value);
+            self.col_sets[location.y].insert(value);
+        }
+    }
+    
+    func getSquares(group: Group) -> [Square] {
+        return self.getSquares(locations: group.getLocations());
+    }
+    
+    func getSquares(locations: [Location]) -> [Square] {
+        return locations.map({ self.board[$0]! });
+    }
+    
+    func getValues(group: Group) -> [Int] {
+        return self.getSquares(group: group).map({ $0.value });
+    }
+    
+    func getValues(locations: [Location]) -> [Int] {
+        return self.getSquares(locations: locations).map({ $0.value });
+
+    }
+    
+    func resetBoard() {
+        self.board.filter({ $1.value != 0 }).forEach({
+            self.board[$0.key]?.value = 0;
+        })
+        
+        self.active = [];
+        self.row_sets = Array(repeating: Set(), count: self.size);
+        self.col_sets = Array(repeating: Set(), count: self.size);
+    }
+    
+    func resetLast() {
         let v: (Int, Int) = self.active.popLast()!;
         let group = self.groups[v.0];
         let permutation = group.getPermutation(idx: v.1);
         
-        let locations = group.getLocations();
-        
-        for (location, value) in zip(locations, permutation) {
-            self.row_sets[location.0][value-1] = false;
-            self.col_sets[location.1][value-1] = false;
-        }
+        self.removePermutation(group: group, permutation: permutation);
     }
     
     private func updateSquares() {
@@ -83,11 +148,7 @@ struct Board {
             let permutation = group.getPermutation(idx: v.1);
 
             for (location, value) in zip(group.getLocations(), permutation) {
-                for square in self.board {
-                    if square.getLocation() == location {
-                        square.setValue(value: value);
-                    }
-                }
+                self.board[location]!.value = value;
             }
         }
     }
@@ -95,22 +156,22 @@ struct Board {
     func allValid() -> Bool {
         self.updateSquares();
         for group in self.groups {
-            if !group.isValid() {
+            if !group.isValid(board: self) {
                 return false;
             }
         }
         return true;
     }
     
-    func getGroup(idx: Int) -> Group {
+    @inlinable func getGroup(idx: Int) -> Group {
         return self.groups[idx];
     }
     
     func isValid() -> Bool {
         updateSquares();
         var boardList = base_set(size: self.size, value: 0);
-        for square in self.board {
-            boardList[square.getLocation().0][square.getLocation().1] = square.getValue();
+        for location in self.board.keys {
+            boardList[location.x][location.y] = self.board[location]!.value;
         }
         
         for x in 0..<self.size {
@@ -131,46 +192,41 @@ struct Board {
         return true;
     }
     
-    private func atLocation(location: (Int, Int)) -> Square {
-        let arr = self.board.filter({ $0.getLocation() == location });
-        assert(arr.count == 1);
-        return arr[0];
+    private func atLocation(location: Location) -> Square {
+        return self.board[location]!;
     }
     
-    mutating func addGroup(locations: [(Int, Int)], operation: Operation, result: Int) {
-        let members = locations.map(self.atLocation);
-        self.groups.append(Group(members: members, operation: operation, result: result));
+    func addGroup(locations: [Location], operation: Operation, result: Int) {
+        self.groups.append(Group(members: locations, operation: operation, result: result));
     }            
     
-    mutating func addPermutations() {
+    func addPermutations() {
         for group in self.groups {
-            let members = group.getMembers();
+            let locations = group.getLocations();
             
             let permutations = permutations(boardSize: self.size, groupSize: group.getSize(), operation: group.getOperation(), result: group.getResult());
-            
+            var i = 0;
             for permutation in permutations {
                 for x in 0..<group.getSize() {
-                    members[x].setValue(value: permutation[x]);
+                    self.board[locations[x]]!.value = permutation[x];
                 }
                 if (self.isValid()) {
+                    i += 1;
                     group.addPermutation(permutation: permutation);
                 }
                 self.resetBoard();
             }
+            assert(i > 0, "No permutation added!");
         }
-        self.groups.sort(by: { $0.permutationCount < $1.permutationCount });
+        self.groups.sort(by: { $0.permutationCount > $1.permutationCount });
         
-        var locations: [(Int, Int)] = [];
+        var locations: [Location] = [];
         for group in self.groups {
-            for member in group.getMembers() {
-                locations.append(member.getLocation());
-            }
+            locations.append(contentsOf: group.getLocations());
         }
         for x in 0..<self.size {
             for y in 0..<self.size {
-                assert(locations.contains(where: {
-                    $0 == (x, y);
-                }));
+                assert(locations.contains(Location(x, y)));
             }
         }
     }

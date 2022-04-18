@@ -12,8 +12,9 @@
 		FA1F369F280864890064F912 /* Square.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F369E280864890064F912 /* Square.swift */; };
 		FA1F36A1280866050064F912 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A0280866050064F912 /* Group.swift */; };
 		FA1F36A3280866520064F912 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A2280866520064F912 /* Operation.swift */; };
-		FA1F36A52808717F0064F912 /* permutation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A42808717F0064F912 /* permutation.swift */; };
+		FA1F36A52808717F0064F912 /* Permutation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A42808717F0064F912 /* Permutation.swift */; };
 		FA1F36A72808B6420064F912 /* infix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A62808B6420064F912 /* infix.swift */; };
+		FA1F36A928097C680064F912 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A828097C680064F912 /* Location.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,8 +36,9 @@
 		FA1F369E280864890064F912 /* Square.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Square.swift; sourceTree = "<group>"; };
 		FA1F36A0280866050064F912 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		FA1F36A2280866520064F912 /* Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
-		FA1F36A42808717F0064F912 /* permutation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = permutation.swift; sourceTree = "<group>"; };
+		FA1F36A42808717F0064F912 /* Permutation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permutation.swift; sourceTree = "<group>"; };
 		FA1F36A62808B6420064F912 /* infix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infix.swift; sourceTree = "<group>"; };
+		FA1F36A828097C680064F912 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,10 +74,11 @@
 				FA1F369528085D7D0064F912 /* main.swift */,
 				FA1F36A2280866520064F912 /* Operation.swift */,
 				FA1F369C280860F20064F912 /* Board.swift */,
-				FA1F36A42808717F0064F912 /* permutation.swift */,
+				FA1F36A42808717F0064F912 /* Permutation.swift */,
 				FA1F36A62808B6420064F912 /* infix.swift */,
 				FA1F36A0280866050064F912 /* Group.swift */,
 				FA1F369E280864890064F912 /* Square.swift */,
+				FA1F36A828097C680064F912 /* Location.swift */,
 			);
 			path = "KenKen Solver";
 			sourceTree = "<group>";
@@ -138,8 +141,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA1F36A52808717F0064F912 /* permutation.swift in Sources */,
+				FA1F36A52808717F0064F912 /* Permutation.swift in Sources */,
 				FA1F369D280860F20064F912 /* Board.swift in Sources */,
+				FA1F36A928097C680064F912 /* Location.swift in Sources */,
 				FA1F369F280864890064F912 /* Square.swift in Sources */,
 				FA1F369628085D7D0064F912 /* main.swift in Sources */,
 				FA1F36A3280866520064F912 /* Operation.swift in Sources */,
@@ -267,6 +271,7 @@
 		FA1F369A28085D7D0064F912 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 24T67HZ563;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -278,9 +283,12 @@
 		FA1F369B28085D7D0064F912 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 24T67HZ563;
 				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
