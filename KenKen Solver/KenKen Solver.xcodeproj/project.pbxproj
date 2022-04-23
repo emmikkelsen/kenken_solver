@@ -15,6 +15,8 @@
 		FA1F36A52808717F0064F912 /* Permutation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A42808717F0064F912 /* Permutation.swift */; };
 		FA1F36A72808B6420064F912 /* infix.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A62808B6420064F912 /* infix.swift */; };
 		FA1F36A928097C680064F912 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1F36A828097C680064F912 /* Location.swift */; };
+		FAADC253280D9F32006F8256 /* Board2.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAADC252280D9F32006F8256 /* Board2.swift */; };
+		FAADC255280DA253006F8256 /* RowCol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAADC254280DA253006F8256 /* RowCol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +41,8 @@
 		FA1F36A42808717F0064F912 /* Permutation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permutation.swift; sourceTree = "<group>"; };
 		FA1F36A62808B6420064F912 /* infix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infix.swift; sourceTree = "<group>"; };
 		FA1F36A828097C680064F912 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		FAADC252280D9F32006F8256 /* Board2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board2.swift; sourceTree = "<group>"; };
+		FAADC254280DA253006F8256 /* RowCol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowCol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +78,8 @@
 				FA1F369528085D7D0064F912 /* main.swift */,
 				FA1F36A2280866520064F912 /* Operation.swift */,
 				FA1F369C280860F20064F912 /* Board.swift */,
+				FAADC252280D9F32006F8256 /* Board2.swift */,
+				FAADC254280DA253006F8256 /* RowCol.swift */,
 				FA1F36A42808717F0064F912 /* Permutation.swift */,
 				FA1F36A62808B6420064F912 /* infix.swift */,
 				FA1F36A0280866050064F912 /* Group.swift */,
@@ -146,9 +152,11 @@
 				FA1F36A928097C680064F912 /* Location.swift in Sources */,
 				FA1F369F280864890064F912 /* Square.swift in Sources */,
 				FA1F369628085D7D0064F912 /* main.swift in Sources */,
+				FAADC253280D9F32006F8256 /* Board2.swift in Sources */,
 				FA1F36A3280866520064F912 /* Operation.swift in Sources */,
 				FA1F36A72808B6420064F912 /* infix.swift in Sources */,
 				FA1F36A1280866050064F912 /* Group.swift in Sources */,
+				FAADC255280DA253006F8256 /* RowCol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

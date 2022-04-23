@@ -19,3 +19,9 @@ func ** (radix: Int, power: Int) -> Int {
 func ** (radix: Double, power: Double) -> Double {
     return pow(radix, power);
 }
+extension Array where Element: Hashable {
+    var isUnique: Bool {
+        var seen = Set<Element>()
+        return allSatisfy { seen.insert($0).inserted }
+    }
+}

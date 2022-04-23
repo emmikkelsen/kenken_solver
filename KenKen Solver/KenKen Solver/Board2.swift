@@ -1,23 +1,21 @@
 //
-//  Board.swift
+//  Board2.swift
 //  KenKen Solver
 //
-//  Created by Emil Bach Mikkelsen on 4/14/22.
+//  Created by Emil Bach Mikkelsen on 4/18/22.
 //
 
 import Darwin
 
-
-class Board<T: RowColProt> {
+class Board2 {
     let size: Int;
     private var board: Dictionary<Location, Square>;
     private var groups: [Group];
-    private var row_sets: [T];
-    private var col_sets: [T];
+    private var row_sets: [RowCol1];
+    private var col_sets: [RowCol1];
     private var active: [(Int, Int)];
-    private var initializer: () -> T;
 
-    init(size: Int, initializer: @escaping () -> T) {
+    init(size: Int) {
         self.size = size;
         
         var board: Dictionary<Location, Square> = Dictionary();
@@ -26,10 +24,9 @@ class Board<T: RowColProt> {
         }
         self.board = board;
         self.groups = [];
-        self.initializer = initializer;
         
-        self.row_sets = Array(repeating: initializer(), count: size);
-        self.col_sets = Array(repeating: initializer(), count: size);
+        self.row_sets = Array(repeating: RowCol1(size), count: size);
+        self.col_sets = Array(repeating: RowCol1(size), count: size);
         self.active = [];
     }
     
@@ -133,8 +130,8 @@ class Board<T: RowColProt> {
         })
         
         self.active = [];
-        self.row_sets = Array(repeating: self.initializer(), count: self.size);
-        self.col_sets = Array(repeating: self.initializer(), count: self.size);
+        self.row_sets = Array(repeating: Set<Int>(), count: self.size);
+        self.col_sets = Array(repeating: Set<Int>(), count: self.size);
     }
     
     func resetLast() {
@@ -201,7 +198,7 @@ class Board<T: RowColProt> {
     
     func addGroup(locations: [Location], operation: Operation, result: Int) {
         self.groups.append(Group(members: locations, operation: operation, result: result));
-    }            
+    }
     
     func addPermutations() {
         for group in self.groups {

@@ -8,7 +8,7 @@
 //import Foundation
 
 let N = 9
-var board = Board(size: N)
+var board = Board<Set<Int>>(size: N, initializer: { Set<Int>() })
 
 
 extension StringProtocol {
