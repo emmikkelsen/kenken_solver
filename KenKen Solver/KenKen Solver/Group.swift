@@ -18,7 +18,7 @@ class Group {
         self.permutations = [];
     }
 
-    func isValid(board: Board<<#T: RowColProt#>>) -> Bool {
+    func isValid<T: RowColProt>(board: Board<T>) -> Bool {
         if self.operation == Operation.add {
             return board.getValues(group: self).reduce(0, +) == self.result;
         } else if self.operation == Operation.multiply {

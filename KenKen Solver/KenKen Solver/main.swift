@@ -7,9 +7,6 @@
 
 //import Foundation
 
-let N = 9
-var board = Board<Set<Int>>(size: N, initializer: { Set<Int>() })
-
 
 extension StringProtocol {
     subscript(offset: Int) -> Character {
@@ -19,7 +16,7 @@ extension StringProtocol {
 
 print("Running Main");
 
-func add(locationString: String, operation: Operation, result: Int) {
+func add<T: RowColProt>(board: Board<T>, locationString: String, operation: Operation, result: Int) {
     var locations: [Location] = [];
     for x in stride(from: 0, to: locationString.count, by: 2) {
         let h = Int(locationString[x].asciiValue! - 97);
@@ -29,58 +26,60 @@ func add(locationString: String, operation: Operation, result: Int) {
     board.addGroup(locations: locations, operation: operation, result: result)
 }
 
+func initializeBoard<T: RowColProt>(board: Board<T>) {
+    
+    add(board: board, locationString: "a1b1", operation: Operation.subtract, result: 1)
+    add(board: board, locationString: "c1d1", operation: Operation.subtract, result: 3)
+    add(board: board, locationString: "e1", operation: Operation.add, result: 7)
+    add(board: board, locationString: "f1g1", operation: Operation.add, result: 14)
+    add(board: board, locationString: "h1", operation: Operation.add, result: 1)
+    add(board: board, locationString: "i1i2", operation: Operation.subtract, result: 7)
 
-add(locationString: "a1b1", operation: Operation.subtract, result: 1)
-add(locationString: "c1d1", operation: Operation.subtract, result: 3)
-add(locationString: "e1", operation: Operation.add, result: 7)
-add(locationString: "f1g1", operation: Operation.add, result: 14)
-add(locationString: "h1", operation: Operation.add, result: 1)
-add(locationString: "i1i2", operation: Operation.subtract, result: 7)
+    add(board: board, locationString: "a2b2c2d2", operation: Operation.add, result: 21)
+    add(board: board, locationString: "e2f2e3e4", operation: Operation.add, result: 14)
+    add(board: board, locationString: "g2g3", operation: Operation.add, result: 10)
+    add(board: board, locationString: "h2h3i3i4", operation: Operation.add, result: 19)
 
-add(locationString: "a2b2c2d2", operation: Operation.add, result: 21)
-add(locationString: "e2f2e3e4", operation: Operation.add, result: 14)
-add(locationString: "g2g3", operation: Operation.add, result: 10)
-add(locationString: "h2h3i3i4", operation: Operation.add, result: 19)
+    add(board: board, locationString: "a3b3", operation: Operation.add, result: 17)
+    add(board: board, locationString: "c3d3", operation: Operation.subtract, result: 3)
+    add(board: board, locationString: "f3f4", operation: Operation.subtract, result: 2)
 
-add(locationString: "a3b3", operation: Operation.add, result: 17)
-add(locationString: "c3d3", operation: Operation.subtract, result: 3)
-add(locationString: "f3f4", operation: Operation.subtract, result: 2)
+    add(board: board, locationString: "a4a5", operation: Operation.subtract, result: 1)
+    add(board: board, locationString: "b4c4", operation: Operation.subtract, result: 6)
+    add(board: board, locationString: "d4d5", operation: Operation.subtract, result: 1)
+    add(board: board, locationString: "g4g5f5", operation: Operation.add, result: 14)
+    add(board: board, locationString: "h4h5i5", operation: Operation.add, result: 16)
 
-add(locationString: "a4a5", operation: Operation.subtract, result: 1)
-add(locationString: "b4c4", operation: Operation.subtract, result: 6)
-add(locationString: "d4d5", operation: Operation.subtract, result: 1)
-add(locationString: "g4g5f5", operation: Operation.add, result: 14)
-add(locationString: "h4h5i5", operation: Operation.add, result: 16)
+    add(board: board, locationString: "b5", operation: Operation.add, result: 7)
+    add(board: board, locationString: "c5c6d6", operation: Operation.add, result: 8)
+    add(board: board, locationString: "e5e6e7", operation: Operation.add, result: 16)
 
-add(locationString: "b5", operation: Operation.add, result: 7)
-add(locationString: "c5c6d6", operation: Operation.add, result: 8)
-add(locationString: "e5e6e7", operation: Operation.add, result: 16)
+    add(board: board, locationString: "a6b6", operation: Operation.subtract, result: 5)
+    add(board: board, locationString: "f6f7", operation: Operation.subtract, result: 5)
+    add(board: board, locationString: "g6g7", operation: Operation.subtract, result: 4)
+    add(board: board, locationString: "h6h7", operation: Operation.subtract, result: 1)
+    add(board: board, locationString: "i6i7", operation: Operation.add, result: 14)
 
-add(locationString: "a6b6", operation: Operation.subtract, result: 5)
-add(locationString: "f6f7", operation: Operation.subtract, result: 5)
-add(locationString: "g6g7", operation: Operation.subtract, result: 4)
-add(locationString: "h6h7", operation: Operation.subtract, result: 1)
-add(locationString: "i6i7", operation: Operation.add, result: 14)
+    add(board: board, locationString: "a7", operation: Operation.add, result: 9)
+    add(board: board, locationString: "b7c7", operation: Operation.subtract, result: 5)
+    add(board: board, locationString: "d7d8", operation: Operation.add, result: 3)
 
-add(locationString: "a7", operation: Operation.add, result: 9)
-add(locationString: "b7c7", operation: Operation.subtract, result: 5)
-add(locationString: "d7d8", operation: Operation.add, result: 3)
+    add(board: board, locationString: "a8a9b9", operation: Operation.add, result: 13)
+    add(board: board, locationString: "b8c8", operation: Operation.add, result: 11)
+    add(board: board, locationString: "e8e9f8f9", operation: Operation.add, result: 27)
+    add(board: board, locationString: "g8g9", operation: Operation.add, result: 10)
+    add(board: board, locationString: "h8h9", operation: Operation.add, result: 10)
+    add(board: board, locationString: "i8i9", operation: Operation.subtract, result: 4)
 
-add(locationString: "a8a9b9", operation: Operation.add, result: 13)
-add(locationString: "b8c8", operation: Operation.add, result: 11)
-add(locationString: "e8e9f8f9", operation: Operation.add, result: 27)
-add(locationString: "g8g9", operation: Operation.add, result: 10)
-add(locationString: "h8h9", operation: Operation.add, result: 10)
-add(locationString: "i8i9", operation: Operation.subtract, result: 4)
+    add(board: board, locationString: "c9d9", operation: Operation.add, result: 8)
+    print("Added Groups");
 
-add(locationString: "c9d9", operation: Operation.add, result: 8)
+    board.addPermutations();
 
-print("Added Groups");
+    print("Added Permutations");
+}
 
 
-board.addPermutations();
-
-print("Added Permutations");
 
 
 var iteration = 0;
@@ -194,6 +193,10 @@ func t3() -> ([(Int, Int)], Int) {
 }
 
 
+let N = 9
+var board = Board<Set<Int>>(size: N, initializer: { Set<Int>() });
+initializeBoard(board: board);
+
 let solution = t(g: 0, p: 0);
 print("Found valid board", solution.1, "in", iteration, "tries");
 
@@ -205,15 +208,11 @@ print("Found valid board", s.0, "in", s.1, "tries");
 board.resetBoard();
 s = t3();
 print("Found valid board", s.0, "in", s.1, "tries");
-board.resetBoard();
 
+guard var board: Board<RowCol1> = Optional(Board<RowCol1>(size: N, initializer: { RowCol1(N) })) else { fatalError() };
+initializeBoard(board: board);
 s = t2();
 print("Found valid board", s.0, "in", s.1, "tries");
-
-board.resetBoard();
-s = t3();
-print("Found valid board", s.0, "in", s.1, "tries");
-
 
 print(board);
 print(board.isValid());

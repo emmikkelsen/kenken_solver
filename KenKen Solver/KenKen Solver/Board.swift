@@ -221,7 +221,8 @@ class Board<T: RowColProt> {
             }
             assert(i > 0, "No permutation added!");
         }
-        self.groups.sort(by: { $0.permutationCount > $1.permutationCount });
+        //self.groups.sort(by: { $0.permutationCount > $1.permutationCount });
+        self.groups.sort(by: { $0.permutationCount < $1.permutationCount })
         
         var locations: [Location] = [];
         for group in self.groups {
@@ -233,4 +234,8 @@ class Board<T: RowColProt> {
             }
         }
     }
+}
+
+func base_set<T>(size: Int, value: T) -> [[T]] {
+    return Array(repeating: Array(repeating: value, count: size), count: size);
 }

@@ -9,13 +9,36 @@ import Foundation
 
 
 protocol RowColProt {
-    func contains(_ value: Int) -> Bool;
-    mutating func remove(_ value: Int);
-    mutating func insert(_ value: Int);
+    func contains(_ member: Int) -> Bool;
+    @discardableResult mutating func remove(_ member: Int) -> Int?;
+    @discardableResult mutating func insert(_ newMember: Int) -> (inserted: Bool, memberAfterInsert: Int);
 }
 
 
 struct RowCol1: RowColProt {
+    
+    private var arr: [Bool];
+    init(_ size: Int) {
+        self.arr = Array.init(repeating: false, count: size);
+    }
+    
+    @inlinable func contains(_ value: Int) -> Bool {
+        return self.arr[value-1] == true;
+    }
+    
+    @inlinable mutating func insert(_ value: Int) -> (inserted: Bool, memberAfterInsert: Int) {
+        self.arr[value-1] = true;
+        return (inserted: true, memberAfterInsert: value);
+    }
+    
+    @inlinable mutating func remove(_ value: Int) -> Int? {
+        self.arr[value-1] = false;
+        return nil;
+    }
+}
+
+struct RowCol3: RowColProt {
+    
     private var arr: [Bool];
     init(_ size: Int) {
         self.arr = Array.init(repeating: false, count: size);
@@ -25,12 +48,14 @@ struct RowCol1: RowColProt {
         return self.arr[value-1] == true;
     }
     
-    mutating func insert(_ value: Int) {
+    mutating func insert(_ value: Int) -> (inserted: Bool, memberAfterInsert: Int) {
         self.arr[value-1] = true;
+        return (inserted: true, memberAfterInsert: value);
     }
     
-    mutating func remove(_ value: Int) {
+    mutating func remove(_ value: Int) -> Int? {
         self.arr[value-1] = false;
+        return nil;
     }
 }
 
@@ -41,18 +66,25 @@ class RowCol2: RowColProt {
         self.arr = Array.init(repeating: false, count: size);
     }
     
-    func contains(_ value: Int) -> Bool {
+    @inlinable func contains(_ value: Int) -> Bool {
         return self.arr[value-1] == true;
     }
     
-    func insert(_ value: Int) {
+    @inlinable func insert(_ value: Int) -> (inserted: Bool, memberAfterInsert: Int) {
         self.arr[value-1] = true;
+        return (inserted: true, memberAfterInsert: value);
     }
     
-    func remove(_ value: Int) {
+    @inlinable func remove(_ value: Int) -> Int? {
         self.arr[value-1] = false;
+        return nil;
     }
 }
 
 
-typealias RowCol3 = Set<Int>;
+typealias RowColSet = Set<Int>;
+
+
+extension Set: RowColProt where Element == Int {
+    
+}
