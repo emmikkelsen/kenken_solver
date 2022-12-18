@@ -1,6 +1,6 @@
 from typing import List, Union
-from .board2 import Board2
-from .operation import Operation
+from kenken_solver.board2 import Board2
+from kenken_solver.operation import Operation
 
 """
 N = 4
@@ -71,7 +71,7 @@ print(board.is_valid())
 print(board.all_valid())
 
 N = 0
-board.reset()
+board.reset_board()
 for sol in solution:
     g_i = sol[0]
     permutations = board.groups[g_i].permutations

@@ -9,7 +9,7 @@ class Square():
     _value: int
     __slots__ = ('_location', '_value')
 
-    def __init__(self, location):
+    def __init__(self, location: Location):
         self._location = location
         self._value = 0
 

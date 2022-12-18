@@ -1,6 +1,6 @@
 from typing import List, Union
-from .board3 import Board3
-from .operation import Operation
+from kenken_solver.board3 import Board3
+from kenken_solver.operation import Operation
 
 """
 N = 4
@@ -79,35 +79,21 @@ add("c9d9", Operation.Add, 8)
 
 board.add_permutations()
 
-N = 0
+solution = board.solve()
+print("Found valid board in", board.permutations_tried, "tries")
+print(board)
+print(board.is_valid())
+print(board.all_valid())
 
-
-def t(g: int, p: int) -> Union[List[int], bool]:
-    global N
-    N += 1
-
-    if board.try_permutation(g, p):
-        if g == len(board.groups) - 1:
-            return [[g, p]]
-        next_group = t(g+1, 0)
-        if next_group:
-            next_group.append([g, p])
-            return next_group
-        if not next_group:
-            board.remove_last_group()
-    if p == len(board.groups[g].permutations) - 1:
-        return False
-    return t(g, p+1)
-
-
-solution = t(0, 0)
-print("Found valid board in", N, "tries")
+board.reset_board()
+solution = board.solve_recursive()
+print("Found valid board in", board.permutations_tried, "tries")
 print(board)
 print(board.is_valid())
 print(board.all_valid())
 
 N = 0
-board.reset()
+board.reset_board()
 for sol in solution:
     g_i = sol[0]
     permutations = board.groups[g_i].permutations
@@ -117,8 +103,8 @@ for sol in solution:
 
 board.groups.reverse()
 
-solution = t(0, 0)
-print("Found valid board in", N, "tries")
+solution = board.solve()
+print("Found valid board in", board.permutations_tried, "tries")
 print(board)
 print(board.is_valid())
 print(board.all_valid())

@@ -1,9 +1,9 @@
-from location import Location
-from operation import Operation
-from square import Square
+from .location import Location
+from .operation import Operation
+from .square import Square
 from math import floor
-from group import Group
-from permutation import permutation
+from .group import Group
+from .permutation import permutation
 from typing import List, Optional, Sequence
 
 
@@ -44,14 +44,14 @@ class Board():
 
     def add_group_to_board(
         self,
-        locations: Sequence[Location],
+        locations: Sequence[List[int]],
         operation: Operation,
         result: int
     ):
         """
         Add group to board
         """
-        members = [self.at_location(x) for x in locations]
+        members = [self.at_location(Location(x[0], x[1])) for x in locations]
         self._groups.append(Group(members, operation, result, self))
 
     @property
@@ -74,7 +74,7 @@ class Board():
                     members[i].value = p[i]
                 if self.is_valid():
                     g.add_permutation(p)
-                self.reset()
+                self.reset_board()
 
         self._groups.sort(key=lambda x: len(x.permutations))
 
@@ -84,7 +84,7 @@ class Board():
                 locations.append(s.location)
         for i in range(self._size):
             for j in range(self._size):
-                assert any(list == [i, j] for list in locations)
+                assert any(location == Location(i, j) for location in locations)
 
     def remove_group(self, g: int) -> None:
         self._groups[g].reset()

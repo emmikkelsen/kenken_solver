@@ -18,11 +18,11 @@ class Board2(Board):
         locs = g.locations()
 
         for loc, val in zip(locs, p):
-            if self._row_sets[loc[0]][val-1] or self._col_sets[loc[1]][val-1]:
+            if self._row_sets[loc.x][val-1] or self._col_sets[loc.y][val-1]:
                 return False
         for loc, val in zip(locs, p):
-            self._row_sets[loc[0]][val-1] = True
-            self._col_sets[loc[1]][val-1] = True
+            self._row_sets[loc.x][val-1] = True
+            self._col_sets[loc.y][val-1] = True
         self._active.append([i_g, i_p])
         return True
 
@@ -46,8 +46,12 @@ class Board2(Board):
         for sq in self._squares:
             sq.value = 0
         self._active = []
-        self._row_sets = [set() for _ in range(self._size)]
-        self._col_sets = [set() for _ in range(self._size)]
+        self._row_sets = [
+            [False for _ in range(self._size)] for _ in range(self._size)
+        ]
+        self._col_sets = [
+            [False for _ in range(self._size)] for _ in range(self._size)
+        ]
 
     def is_valid(self):
         for x in self._active:
