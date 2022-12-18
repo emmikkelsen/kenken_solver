@@ -1,7 +1,17 @@
+from .location import Location
+
+
 class Square():
+    """
+    Representation of a square on the KenKen board
+    """
+    _location: Location
+    _value: int
+    __slots__ = ('_location', '_value')
+
     def __init__(self, location):
         self._location = location
-        self._value: int = 0
+        self._value = 0
 
     @property
     def value(self):

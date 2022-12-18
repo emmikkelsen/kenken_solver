@@ -1,5 +1,5 @@
-from square import Square
-from operation import Operation
+from .square import Square
+from .operation import Operation
 from functools import reduce  # Required in Python 3
 import operator
 from typing import List

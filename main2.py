@@ -1,6 +1,6 @@
 from typing import List, Union
-from board2 import Board2
-from operation import Operation
+from .board3 import Board3
+from .operation import Operation
 
 """
 N = 4
@@ -18,7 +18,7 @@ board.add_permutations()
 """
 
 N = 9
-board = Board2(N)
+board = Board3(N)
 
 
 def add(loc_string: str, op: Operation, result: int):
@@ -28,7 +28,7 @@ def add(loc_string: str, op: Operation, result: int):
         h = ord(loc_string[i]) - 97
         v = int(loc_string[i+1]) - 1
         location_array.append([h, v])
-    board.add_group(location_array, op, result)
+    board.add_group_to_board(location_array, op, result)
 
 
 add("a1b1", Operation.Subtract, 1)
@@ -94,7 +94,7 @@ def t(g: int, p: int) -> Union[List[int], bool]:
             next_group.append([g, p])
             return next_group
         if not next_group:
-            board.reset(g)
+            board.remove_last_group()
     if p == len(board.groups[g].permutations) - 1:
         return False
     return t(g, p+1)

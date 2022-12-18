@@ -1,48 +1,67 @@
+from location import Location
+from operation import Operation
 from square import Square
 from math import floor
 from group import Group
 from permutation import permutation
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 
 class Board():
+    """
+    Representation of KenKen board
+    """
+
+    _groups: Sequence[Group]
+    _size: int
+    _squares: Sequence[Square]
+
     def __init__(self, size):
-        self._board: List[Square] = [Square([floor(x/size), x % size])
-                                     for x in range(size**2)]
-        self._groups: List[Group] = []
-        self._size: int = size
+        # Create all squares on board
+        self._squares = [Square(Location(floor(x/size), x % size))
+                         for x in range(size**2)]
+        self._groups = []
+        self._size = size
 
-    def at_location(self, location):
-        return next(filter(lambda x: (x.location[0] == location[0]
-                                      and x.location[1] == location[1]),
-                           self._board))
+    def at_location(self, location: Location):
+        """
+        Get square at location
+        """
+        return next(
+            filter(
+                lambda square: (square.location.x == location.x
+                                and square.location.y == location.y),
+                self._squares
+            )
+        )
 
-    def add_value(self, location, value):
-        sq = next(filter(lambda x: (x.location[0] == location[0]
-                                    and x.location[1] == location[1]),
-                         self._board))
+    def set_value_of_square(self, location: Location, value: int):
+        """
+        Set value of square at location
+        """
+        sq = self.at_location(location)
         sq.value = value
 
-    def add_group(self, locations, operation, result):
+    def add_group_to_board(
+        self,
+        locations: Sequence[Location],
+        operation: Operation,
+        result: int
+    ):
+        """
+        Add group to board
+        """
         members = [self.at_location(x) for x in locations]
         self._groups.append(Group(members, operation, result, self))
-
-    def _as_value_array(self):
-        arr = [[0]*self._size for _ in range(self._size)]
-        for sq in self._board:
-            loc = sq.location
-            arr[loc[0]][loc[1]] = sq.value
-        return(arr)
-
-    def __str__(self):
-        arr = self._as_value_array()
-        return arr.__str__()
 
     @property
     def groups(self):
         return self._groups
 
     def add_permutations(self):
+        """
+        Add permutations to groups on board
+        """
         for g in self._groups:
             members = g.members
             n = len(members)
@@ -67,12 +86,12 @@ class Board():
             for j in range(self._size):
                 assert any(list == [i, j] for list in locations)
 
-    def reset(self, g: Optional[Group] = None) -> None:
-        if g is None:
-            for sq in self._board:
-                sq.value = 0
-        else:
-            self._groups[g].reset()
+    def remove_group(self, g: int) -> None:
+        self._groups[g].reset()
+
+    def reset_board(self) -> None:
+        for sq in self._squares:
+            sq.value = 0
 
     def try_permutation(self, i_g, i_p):
         g = self._groups[i_g]
@@ -86,9 +105,9 @@ class Board():
 
     def try_set(self, loc, value):
         in_row = list(filter(lambda x: x.location[0] == loc[0],
-                             self._board))
+                             self._squares))
         in_col = list(filter(lambda x: x.location[1] == loc[1],
-                             self._board))
+                             self._squares))
         s = set()
         for y in in_row:
             s.add(y.value)
@@ -98,10 +117,13 @@ class Board():
             return False
         next(filter(lambda x: x.location[0] == loc[0]
                     and x.location[1] == loc[1],
-                    self._board)).value = value
+                    self._squares)).value = value
         return True
 
     def is_valid(self):
+        """
+        Check if board is valid
+        """
         arr = self._as_value_array()
         for x in range(self._size):
             row = arr[x]
@@ -122,8 +144,24 @@ class Board():
         return True
 
     def all_valid(self):
+        """
+        Check if all groups are valid
+        """
         return all([gr.is_valid() for gr in self._groups])
 
     @property
     def size(self):
         return self._size
+
+    def _as_value_array(self):
+        """
+        Represent board as array of integer values
+        """
+        arr = [[0]*self._size for _ in range(self._size)]
+        for sq in self._squares:
+            loc = sq.location
+            arr[loc[0]][loc[1]] = sq.value
+        return arr
+
+    def __str__(self):
+        return str(self._as_value_array())

@@ -110,7 +110,7 @@ func t(g: Int, p: Int) -> (Bool, [(Int, Int)]) {
     return t(g: g, p: p + 1);
 }
 
-func t2() -> ([(Int, Int)], Int) {
+func t2<T>(_ board: Board<T>) -> ([(Int, Int)], Int) {
     var iteration = 0;
     var g = 0;
     var p = 0;
@@ -149,7 +149,7 @@ func t2() -> ([(Int, Int)], Int) {
     return (active, iteration);
 }
 
-func t3() -> ([(Int, Int)], Int) {
+func t3<T>(_ board: Board<T>) -> ([(Int, Int)], Int) {
     var iteration = 0;
     var g = 0;
     var p = 0;
@@ -198,20 +198,20 @@ var board = Board<Set<Int>>(size: N, initializer: { Set<Int>() });
 initializeBoard(board: board);
 
 let solution = t(g: 0, p: 0);
-print("Found valid board", solution.1, "in", iteration, "tries");
+print("Fosund valid board", solution.1, "in", iteration, "tries");
+
+//board.resetBoard();
+
+//var s = t2(board);
+//print("Found valid board", s.0, "in", s.1, "tries");
 
 board.resetBoard();
-
-var s = t2();
+var s = t3(board);
 print("Found valid board", s.0, "in", s.1, "tries");
 
-board.resetBoard();
-s = t3();
-print("Found valid board", s.0, "in", s.1, "tries");
-
-guard var board: Board<RowCol1> = Optional(Board<RowCol1>(size: N, initializer: { RowCol1(N) })) else { fatalError() };
-initializeBoard(board: board);
-s = t2();
+guard var board1: Board<RowCol1> = Optional(Board<RowCol1>(size: N, initializer: { RowCol1(N) })) else { fatalError() };
+initializeBoard(board: board1);
+s = t2(board1);
 print("Found valid board", s.0, "in", s.1, "tries");
 
 print(board);

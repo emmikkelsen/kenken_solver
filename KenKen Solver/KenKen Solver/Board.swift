@@ -83,7 +83,7 @@ class Board<T: RowColProt> {
             if (self.row_sets[location.x].contains(value)) {
                 return false;
             }
-            if (self.col_sets[location.x].contains(value)) {
+            if (self.col_sets[location.y].contains(value)) {
                 return false;
             }
         }
@@ -222,7 +222,7 @@ class Board<T: RowColProt> {
             assert(i > 0, "No permutation added!");
         }
         //self.groups.sort(by: { $0.permutationCount > $1.permutationCount });
-        self.groups.sort(by: { $0.permutationCount < $1.permutationCount })
+        //self.groups.sort(by: { $0.permutationCount < $1.permutationCount })
         
         var locations: [Location] = [];
         for group in self.groups {

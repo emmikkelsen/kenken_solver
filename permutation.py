@@ -1,10 +1,13 @@
-from operation import Operation
+from .operation import Operation
 
 
-def permutation(size, n, op, result):
+def permutation(max_value: int, group_size: int, op: Operation, result: int):
+    """
+    Generate all com
+    """
     if op == Operation.Divide:
         maxes = list(filter(lambda x: x % result == 0 and x > 0,
-                            range(size+1)))
+                            range(max_value+1)))
         mins = [m//result for m in maxes]
         p = []
         for x in range(len(maxes)):
@@ -13,7 +16,7 @@ def permutation(size, n, op, result):
         return p
 
     if op == Operation.Subtract:
-        maxes = list(filter(lambda x: x > result, range(size+1)))
+        maxes = list(filter(lambda x: x > result, range(max_value+1)))
         mins = [m-result for m in maxes]
         p = []
         for x in range(len(maxes)):
@@ -22,10 +25,10 @@ def permutation(size, n, op, result):
         return p
 
     if op == Operation.Add:
-        return pe_add(size, result, n)
+        return pe_add(max_value, result, group_size)
 
     if op == Operation.Multiply:
-        return pe_multiply(size, result, n)
+        return pe_multiply(max_value, result, group_size)
 
 
 def pe_add(ma, res, n):
