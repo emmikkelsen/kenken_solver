@@ -1,11 +1,15 @@
+import operator
+from functools import reduce
+from typing import MutableSequence, Sequence
+
 from .location import Location
 from .operation import Operation
-from functools import reduce  # Required in Python 3
-import operator
-from typing import MutableSequence, Sequence
 
 
 class Group:
+    """
+    Representation of group on KenKen board
+    """
     _locations: Sequence[Location]
     _operation: Operation
     _result: int

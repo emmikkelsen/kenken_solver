@@ -1,10 +1,10 @@
 from math import floor
 from typing import List, Mapping, NamedTuple, Sequence, Set, Union
 
-from .operation import Operation
-from .location import Location
-from .square import Square
 from .group import Group
+from .location import Location
+from .operation import Operation
+from .square import Square
 
 
 class GroupPermutation(NamedTuple):
@@ -91,6 +91,9 @@ class Board():
         self._col_sets = [set() for _ in range(self._size)]
 
     def _as_value_array(self):
+        """
+        Helper function to set square values and print board
+        """
         for group_idx, permutation_idx in self._active_groups:
             group = self._groups[group_idx]
             permutation = group.permutations[permutation_idx]
@@ -103,11 +106,19 @@ class Board():
         return arr
 
     def solve_recursive(self):
+        """
+        Solve board recursively
+        """
         self._permuations_tried = 0
 
         def t(g: int, p: int) -> Union[List[int], bool]:
             """
-            Helper function for recursion
+            Recursion function. When a valid permutation is found and added,
+            tries to find valid permutation in next group until last
+            group is reached and valid permutation is found.
+
+            If no valid permutation is found for a group, then steps to next
+            permutation in prior group
             """
             self._permuations_tried += 1
 
@@ -123,15 +134,19 @@ class Board():
                     next_group.append([g, p])
                     return next_group
                 else:
+                    if g == 0:
+                        raise Exception('No valid solutions found')
                     self.remove_last_group()
             if p == len(self._groups[g].permutations) - 1:
                 # Return False if no permutations found for group
                 return False
             return t(g, p+1)
-
         return t(0, 0)
 
     def solve(self):
+        """
+        Solve board using loop. Uses same logic as recursive solver
+        """
         self._permuations_tried = 0
 
         solved = False
@@ -145,6 +160,8 @@ class Board():
                 == cgp.permutation_idx
             ):
                 # Step down, since no valid permutation is available
+                if cgp.group_idx == 0:
+                    raise Exception('No valid solutions found')
                 last_group = self.remove_last_group()
                 cgp = GroupPermutation(
                     last_group.group_idx,
@@ -194,8 +211,10 @@ class Board():
         locations = [loc for group in self._groups for loc in group.locations]
         for i in range(self._size):
             for j in range(self._size):
-                assert any(location == Location(i, j)
-                           for location in locations)
+                if Location(i, j) not in locations:
+                    raise Exception(
+                        f'{Location(i, j)} not found on board'
+                    )
 
     def is_valid(self):
         """

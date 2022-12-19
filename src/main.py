@@ -6,6 +6,9 @@ board = Board(N)
 
 
 def add(loc_string: str, op: Operation, result: int):
+    """
+    Add a group to the board using shorthand notation
+    """
     global board
     location_array = []
     for i in range(0, len(loc_string), 2):
@@ -15,51 +18,49 @@ def add(loc_string: str, op: Operation, result: int):
     board.add_group_to_board(location_array, op, result)
 
 
-add("a1b1", Operation.Subtract, 1)
-add("c1d1", Operation.Subtract, 3)
-add("e1", Operation.Add, 7)
-add("f1g1", Operation.Add, 14)
-add("h1", Operation.Add, 1)
-add("i1i2", Operation.Subtract, 7)
+add("a1b1", Operation.Subtract, 8)
+add("c1d1", Operation.Subtract, 5)
+add("e1f1g1g2", Operation.Add, 17)
+add("h1i1", Operation.Subtract, 1)
 
-add("a2b2c2d2", Operation.Add, 21)
-add("e2f2e3e4", Operation.Add, 14)
-add("g2g3", Operation.Add, 10)
-add("h2h3i3i4", Operation.Add, 19)
+add("a2a3b3", Operation.Multiply, 24)
+add("b2c2", Operation.Add, 9)
+add("d2e2f2", Operation.Add, 19)
+add("h2i2i3", Operation.Add, 12)
 
-add("a3b3", Operation.Add, 17)
-add("c3d3", Operation.Subtract, 3)
-add("f3f4", Operation.Subtract, 2)
+add("c3c4b4", Operation.Multiply, 252)
+add("d3d4", Operation.Divide, 4)
+add("e3e4", Operation.Add, 13)
+add("f3g3", Operation.Divide, 4)
+add("h3h4", Operation.Multiply, 63)
 
-add("a4a5", Operation.Subtract, 1)
-add("b4c4", Operation.Subtract, 6)
-add("d4d5", Operation.Subtract, 1)
-add("g4g5f5", Operation.Add, 14)
-add("h4h5i5", Operation.Add, 16)
+add("a4a5b5c5", Operation.Multiply, 450)
+add("f4f5f6e6", Operation.Add, 24)
+add("g4g5", Operation.Subtract, 3)
+add("i4i5", Operation.Subtract, 1)
 
-add("b5", Operation.Add, 7)
-add("c5c6d6", Operation.Add, 8)
-add("e5e6e7", Operation.Add, 16)
+add("d5e5", Operation.Subtract, 5)
+add("h5", Operation.Add, 4)
 
-add("a6b6", Operation.Subtract, 5)
-add("f6f7", Operation.Subtract, 5)
-add("g6g7", Operation.Subtract, 4)
-add("h6h7", Operation.Subtract, 1)
-add("i6i7", Operation.Add, 14)
 
-add("a7", Operation.Add, 9)
-add("b7c7", Operation.Subtract, 5)
-add("d7d8", Operation.Add, 3)
+add("a6a7", Operation.Subtract, 3)
+add("b6b7", Operation.Add, 17)
+add("c6d6", Operation.Multiply, 6)
+add("g6g7", Operation.Subtract, 2)
+add("h6h7", Operation.Multiply, 8)
+add("i6i7", Operation.Add, 11)
 
-add("a8a9b9", Operation.Add, 13)
-add("b8c8", Operation.Add, 11)
-add("e8e9f8f9", Operation.Add, 27)
-add("g8g9", Operation.Add, 10)
-add("h8h9", Operation.Add, 10)
-add("i8i9", Operation.Subtract, 4)
+add("c7d7", Operation.Subtract, 5)
+add("e7e8d8", Operation.Add, 21)
+add("f7f8", Operation.Subtract, 5)
 
-add("c9d9", Operation.Add, 8)
+add("a8a9", Operation.Divide, 2)
+add("b8b9", Operation.Subtract, 5)
+add("c8c9", Operation.Subtract, 3)
+add("g8g9f9", Operation.Multiply, 81)
+add("h8i8h9i9", Operation.Add, 20)
 
+add("d9e9", Operation.Multiply, 10)
 
 board.add_permutations()
 
