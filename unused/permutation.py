@@ -1,4 +1,4 @@
-from .operation import Operation
+from ..src.kenken_solver.operation import Operation
 
 
 def permutation(max_value: int, group_size: int, op: Operation, result: int):
