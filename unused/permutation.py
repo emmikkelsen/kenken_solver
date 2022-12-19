@@ -5,7 +5,7 @@ def permutation(max_value: int, group_size: int, op: Operation, result: int):
     """
     Generate all com
     """
-    if op == Operation.Divide:
+    if op == Operation.DIVIDE:
         maxes = list(filter(lambda x: x % result == 0 and x > 0,
                             range(max_value+1)))
         mins = [m//result for m in maxes]
@@ -15,7 +15,7 @@ def permutation(max_value: int, group_size: int, op: Operation, result: int):
             p.append([mins[x], maxes[x]])
         return p
 
-    if op == Operation.Subtract:
+    if op == Operation.SUBTRACT:
         maxes = list(filter(lambda x: x > result, range(max_value+1)))
         mins = [m-result for m in maxes]
         p = []
@@ -24,10 +24,10 @@ def permutation(max_value: int, group_size: int, op: Operation, result: int):
             p.append([mins[x], maxes[x]])
         return p
 
-    if op == Operation.Add:
+    if op == Operation.ADD:
         return pe_add(max_value, result, group_size)
 
-    if op == Operation.Multiply:
+    if op == Operation.MULTIPLY:
         return pe_multiply(max_value, result, group_size)
 
 

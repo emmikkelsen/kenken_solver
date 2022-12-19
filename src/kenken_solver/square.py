@@ -13,5 +13,5 @@ class Square():
         return self._value
 
     @value.setter
-    def value(self, v):
-        self._value = v
+    def value(self, val: int):
+        self._value = val

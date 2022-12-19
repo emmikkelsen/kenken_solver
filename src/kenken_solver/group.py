@@ -31,31 +31,52 @@ class Group:
         self._size = len(self._locations)
         self._permutations = []
 
-    def prod(self, iterable):
-        return reduce(operator.mul, iterable, 1)
-
     @property
     def locations(self):
+        """
+        Group locations
+        """
         return self._locations
 
     @property
     def size(self):
+        """
+        Group size
+        """
         return self._size
 
     @property
     def result(self):
+        """
+        Group result
+        """
         return self._result
 
     @property
     def operation(self):
+        """
+        Group operation
+        """
         return self._operation
 
+    @property
+    def permutations(self):
+        """
+        Group permutations
+        """
+        return self._permutations
+
     def add_permutations(self):
+        """
+        Set permutations for group
+        """
         permutations = self.all_permutations()
         x_values = [loc.x for loc in self._locations]
         y_values = [loc.y for loc in self._locations]
 
         for permutation in permutations:
+            # Check whether permutation includes duplicates
+            # in same row or column before adding
             if (
                 len(set(zip(permutation, x_values)))
                 == len(set(zip(permutation, y_values)))
@@ -63,76 +84,87 @@ class Group:
             ):
                 self._permutations.append(permutation)
 
-    def reset(self):
-        for sq in self._locations:
-            sq.value = 0
-
-    @property
-    def permutations(self):
-        return self._permutations
-
     def permutation_is_valid(self, permutation: Sequence[int]):
-        if self._operation == Operation.Add:
+        """
+        Check if permutation is valid for group
+        """
+        if self._operation == Operation.ADD:
             return sum(permutation) == self._result
-        if self._operation == Operation.Multiply:
-            return self.prod(permutation) == self._result
-        if self._operation == Operation.Subtract:
+        if self._operation == Operation.MULTIPLY:
+            return _prod(permutation) == self._result
+        if self._operation == Operation.SUBTRACT:
             return max(permutation)-min(permutation) == self._result
-        if self._operation == Operation.Divide:
+        if self._operation == Operation.DIVIDE:
             return max(permutation)/min(permutation) == self._result
+        raise Exception('Operation is not valid')
 
     def all_permutations(self) -> Sequence[Sequence[int]]:
         """
-        Generate all com
+        Generate all possible permutations for group
         """
-
-        if self._operation == Operation.Divide:
+        if self._operation == Operation.DIVIDE:
             maxes = list(filter(lambda x: x % self._result == 0 and x > 0,
                                 range(self._max_value+1)))
             mins = [m//self._result for m in maxes]
-            p = []
-            for x in range(len(maxes)):
-                p.append([maxes[x], mins[x]])
-                p.append([mins[x], maxes[x]])
-            return p
+            permutations = []
+            for i in range(len(maxes)):
+                permutations.append([maxes[i], mins[i]])
+                permutations.append([mins[i], maxes[i]])
+            return permutations
 
-        if self._operation == Operation.Subtract:
+        if self._operation == Operation.SUBTRACT:
             maxes = list(
                 filter(lambda x: x > self._result, range(self._max_value+1))
             )
             mins = [m - self._result for m in maxes]
-            p = []
-            for x in range(len(maxes)):
-                p.append([maxes[x], mins[x]])
-                p.append([mins[x], maxes[x]])
-            return p
+            permutations = []
+            for i in range(len(maxes)):
+                permutations.append([maxes[i], mins[i]])
+                permutations.append([mins[i], maxes[i]])
+            return permutations
 
-        if self._operation == Operation.Add:
+        if self._operation == Operation.ADD:
             return _permutations_add(self._max_value, self._result, self._size)
 
-        if self._operation == Operation.Multiply:
+        if self._operation == Operation.MULTIPLY:
             return _permutations_multiply(self._max_value, self._result,
                                           self._size)
 
+        raise Exception('Invalid operation for group')
 
-def _permutations_add(ma, res, n):
-    if n == 1:
-        return [[res]]
+
+def _permutations_add(max_value: int, result: int, amount: int):
+    """
+    Generate all permutations by addition
+    """
+    if amount == 1:
+        return [[result]]
+    solutions = []
+    for i in range(1, max_value+1):
+        if (result-i)/(amount-1) <= max_value and result-i >= amount-1:
+            for solution in _permutations_add(max_value, result-i, amount-1):
+                solutions.append(solution + [i])
+    return solutions
+
+
+def _permutations_multiply(max_value: int, result: int, amount: int):
+    """
+    Generate all permutations by multiplication
+    """
+    if amount == 1:
+        return [[result]]
     t = []
-    for x in range(1, ma+1):
-        if (res-x)/(n-1) <= ma and res-x >= n-1:
-            for ss in _permutations_add(ma, res-x, n-1):
-                t.append(ss + [x])
-    return t
-
-
-def _permutations_multiply(ma, res, n):
-    if n == 1:
-        return [[res]]
-    t = []
-    factors = list(filter(lambda x: res % x == 0, range(1, ma+1)))
+    factors = list(filter(lambda x: result % x == 0, range(1, max_value+1)))
     for x in factors:
-        if res//x <= ma**(n-1):
-            for ss in _permutations_multiply(ma, res//x, n-1):
-                t.append(ss + [int(x)])
+        if result//x <= max_value**(amount-1):
+            for solution in _permutations_multiply(
+                    max_value, result//x, amount-1):
+                t.append(solution + [int(x)])
     return t
+
+
+def _prod(iterable):
+    """
+    Helper function for multiplication
+    """
+    return reduce(operator.mul, iterable, 1)

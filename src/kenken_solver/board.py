@@ -8,6 +8,9 @@ from .square import Square
 
 
 class GroupPermutation(NamedTuple):
+    """
+    Group and permuation collection
+    """
     group_idx: int
     permutation_idx: int
 
@@ -18,7 +21,6 @@ class Board():
     represented by a set of values. E.g. if 1 is placed in square (1, 2)
     1 will be in the 1st row set and 2nd column set.
     """
-
     _groups: Sequence[Group]
     _size: int
     _squares: Mapping[Location, Square]
@@ -26,7 +28,7 @@ class Board():
     _col_sets: List[Set[int]]
     _active_groups: List[GroupPermutation]
 
-    _permuations_tried: int  # Amount of permutations tried by solver
+    _iterations: int  # Amount of permutations tried by solver
 
     def __init__(self, size):
         self._squares = {
@@ -109,9 +111,9 @@ class Board():
         """
         Solve board recursively
         """
-        self._permuations_tried = 0
+        self._iterations = 0
 
-        def t(g: int, p: int) -> Union[List[int], bool]:
+        def t(group_idx: int, permutation_idx: int) -> Union[List[int], bool]:
             """
             Recursion function. When a valid permutation is found and added,
             tries to find valid permutation in next group until last
@@ -120,39 +122,38 @@ class Board():
             If no valid permutation is found for a group, then steps to next
             permutation in prior group
             """
-            self._permuations_tried += 1
+            self._iterations += 1
 
-            if self.try_permutation(g, p):
+            if self.try_permutation(group_idx, permutation_idx):
                 # Permutation p of group g is valid
-                if g == len(self._groups) - 1:
+                if group_idx == len(self._groups) - 1:
                     # Solution found, since permutation
                     # of last group has been assigned
-                    return [(g, p)]
+                    return [(group_idx, permutation_idx)]
 
-                next_group = t(g+1, 0)  # Try next group
+                next_group = t(group_idx+1, 0)  # Try next group
                 if next_group:
-                    next_group.append([g, p])
+                    next_group.append([group_idx, permutation_idx])
                     return next_group
-                else:
-                    if g == 0:
-                        raise Exception('No valid solutions found')
-                    self.remove_last_group()
-            if p == len(self._groups[g].permutations) - 1:
+                if group_idx == 0:
+                    raise Exception('No valid solutions found')
+                self.remove_last_group()
+            if permutation_idx == len(self._groups[group_idx].permutations)-1:
                 # Return False if no permutations found for group
                 return False
-            return t(g, p+1)
+            return t(group_idx, permutation_idx+1)
         return t(0, 0)
 
     def solve(self):
         """
         Solve board using loop. Uses same logic as recursive solver
         """
-        self._permuations_tried = 0
+        self._iterations = 0
 
         solved = False
         cgp = GroupPermutation(0, 0)
         while not solved:
-            self._permuations_tried += 1
+            self._iterations += 1
             if cgp.group_idx == len(self._groups):
                 solved = True
             elif (
@@ -176,20 +177,19 @@ class Board():
         return self._active_groups
 
     @property
-    def permutations_tried(self):
-        return self._permuations_tried
+    def iterations(self):
+        return self._iterations
 
     def add_group_to_board(
         self,
-        locations: Sequence[List[int]],
+        locations: Sequence[Location],
         operation: Operation,
         result: int
     ):
         """
         Add group to board
         """
-        members = [Location(x[0], x[1]) for x in locations]
-        self._groups.append(Group(members, operation, result, self._size))
+        self._groups.append(Group(locations, operation, result, self._size))
 
     def at_location(self, location: Location):
         """
@@ -201,8 +201,8 @@ class Board():
         """
         Add permutations to groups on board
         """
-        for g in self._groups:
-            g.add_permutations()
+        for group in self._groups:
+            group.add_permutations()
 
         # Sort groups by amount of permutations for fast solving
         self._groups.sort(key=lambda x: len(x.permutations))
@@ -216,38 +216,30 @@ class Board():
                         f'{Location(i, j)} not found on board'
                     )
 
-    def is_valid(self):
+    def board_is_valid(self):
         """
         Check if board is valid
         """
         arr = self._as_value_array()
-        for x in range(self._size):
-            row = arr[x]
-            s = set()
-            for y in row:
-                if y in s:
-                    return False
-                if y > 0:
-                    s.add(y)
-        for x in range(self._size):
-            col = [arr[y][x] for y in range(self._size)]
-            s = set()
-            for y in col:
-                if y in s:
-                    return False
-                if y > 0:
-                    s.add(y)
+        for i in range(self._size):
+            row = set(arr[i])
+            if not all(x + 1 in row for x in range(self._size)):
+                return False
+        for i in range(self._size):
+            col = set(arr[y][i] for y in range(self._size))
+            if not all(x + 1 in col for x in range(self._size)):
+                return False
         return True
 
-    def all_valid(self):
+    def all_groups_valid(self):
         """
         Check if all groups are valid
         """
         return all(
-            [gr.permutation_is_valid(
+            gr.permutation_is_valid(
                 [self._squares[loc].value for loc in gr.locations]
-            ) for gr in self._groups]
+            ) for gr in self._groups
         )
 
     def __str__(self):
-        return str(self._as_value_array())
+        return '\n'.join(str(row) for row in self._as_value_array())
